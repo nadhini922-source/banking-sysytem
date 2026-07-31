@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                bat 'python -m pip install --upgrade pip'
+                bat 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                bat 'python -m unittest test_loan.py'
+            }
+        }
+
+    }
+
+    post {
+
+        success {
+            echo 'Build Successful! Loan Eligibility Application Passed.'
+        }
+
+        failure {
+            echo 'Build Failed! Please Fix the Errors.'
+        }
+
+        always {
+            echo 'Pipeline Execution Completed.'
+        }
+    }
+}
